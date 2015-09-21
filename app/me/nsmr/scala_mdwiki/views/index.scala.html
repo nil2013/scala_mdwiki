@@ -1,0 +1,14 @@
+@(message: String)
+@import me.nsmr.scala_mdwiki.views.html.helper._
+
+@main("Welcome to Play") {
+
+<form action="/mdtest" method="POST">
+  <div class="form-group">
+    <label for="exampleInputEmail1">Markdown source</label>
+    <textarea class="form-control" rows="25" name="source"></textarea>
+  </div>
+  <input type="submit"  class="btn btn-default" value="Markdown Test" />
+  @* <button type="submit" class="btn btn-default">Submit</button> *@
+</form>
+}
