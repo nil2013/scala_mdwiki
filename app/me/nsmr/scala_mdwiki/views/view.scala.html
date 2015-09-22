@@ -1,11 +1,16 @@
-@(title: String, content: scala.xml.Node)
+@(recent: Seq[me.nsmr.scala_mdwiki.models.Post], post: me.nsmr.scala_mdwiki.models.Post)
 @import me.nsmr.scala_mdwiki.views.html.helper._
+@import me.nsmr.scala_mdwiki.controllers
 
-@main(title) {
+@main(post.title, post.id) {
 
 @* <article class="markdown-body"> *@
-
-<div class="content">@content</div>
+<div class="left navigation">
+<ul>
+  @for(post <- recent) {<li><a href="@controllers.routes.Application.view(post.id)">@post.title</a></li>}
+</ul>
+</div>
+<div class="content">@post.getContentXHTML</div>
 
 @* </article> *@
 

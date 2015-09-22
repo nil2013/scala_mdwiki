@@ -1,0 +1,13 @@
+@()
+@import me.nsmr.scala_mdwiki.views.html.helper._
+@import me.nsmr.scala_mdwiki.controllers
+
+@main("Add new page") {
+<form action="@me.nsmr.scala_mdwiki.controllers.routes.Application.post" method="POST">
+  <div class="form-group">
+    <label for="exampleInputEmail1">Markdown source</label>
+    <textarea class="form-control" rows="25" name="source"></textarea>
+  </div>
+  <input type="submit"  class="btn btn-default" value="Save" />
+</form>
+}

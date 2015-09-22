@@ -1,4 +1,4 @@
-@(title: String)(content: Html)
+@(title: String, id: Long = -1L)(content: Html)
 
 <!DOCTYPE html>
 
@@ -6,12 +6,12 @@
   <head>
     <title>@title - Scala-MDWiki</title>
     @* <script src="@routes.Assets.at("javascripts/jquery-1.9.0.min.js")" type="text/javascript"></script> *@
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
     <!-- Latest compiled and minified CSS -->
-        @* <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"> *@
+    @* <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"> *@
     <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/bootstrap.min.css")">
-        <!-- Latest compiled and minified JavaScript -->
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
     <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/markdown.min.css")">
     @* <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/github.css")"> *@
     @* <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/swiss.css")"> *@
@@ -37,6 +37,11 @@
           <ul class="nav navbar-nav">
           <li class="active"><a href="#tab1" data-toggle="tab">@title</a></li>
           </ul>
+          <ul class="nav navbar-nav navbar-right">
+          <li><a href="@me.nsmr.scala_mdwiki.controllers.routes.Application.add">Add page</a></li>
+          @if(id>=0) { <li><a href="@me.nsmr.scala_mdwiki.controllers.routes.Application.edit(id)">Edit</a></li> }
+          <li><a href="#" data-toggle="modal" data-target="#upload-modal">Upload</a></li>
+          </ul>
           <form class="navbar-form navbar-right" role="search" action="">
             <div class="form-group">
               <input type="text" class="form-control" placeholder="Search" name="keyword" value="keyword">
@@ -49,5 +54,26 @@
     <div id="main">
       @content
     </div>
+<!-- Modal -->
+<form method="post" enctype="multipart/form-data" action="/upload">
+<div class="modal fade" id="upload-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Upload Markdown file</h4>
+      </div>
+      <div class="modal-body">
+        <p>Please select Markdown file to upload.</p>
+        <input type="file" name="mdfile" />
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+        <input type="submit" class="btn btn-primary" value="Upload" />
+      </div>
+    </div>
+  </div>
+</div>
+</form>
   </body>
 </html>

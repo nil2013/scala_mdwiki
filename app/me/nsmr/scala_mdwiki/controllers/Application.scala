@@ -6,32 +6,84 @@ import play.api.data.Form
 import play.api.data.Forms._
 import me.nsmr.parser.GFDefaultDiscounter._
 import me.nsmr.scala_mdwiki.models.Post
+import me.nsmr.utils.FileUtil
 
 object Application extends Controller {
 
-  def index = Action { Ok(me.nsmr.scala_mdwiki.views.html.index("Your new application is ready.")) }
+  def index = Action {
+    val list = Post.getList() match {
+      case Some(list) => list
+      case None => List()
+    }
+    Ok(me.nsmr.scala_mdwiki.views.html.index(list))
+  }
 
   def post = Action { implicit req =>
     val form = Form("source" -> nonEmptyText).bindFromRequest
     if(form.hasErrors) {
-      Ok(me.nsmr.scala_mdwiki.views.html.index("Your new application is ready."))
+      Ok(me.nsmr.scala_mdwiki.views.html.add())
     } else {
-      val source = form.get
-      val xhtml = toXHTML(knockoff(source))
-      val title = xhtml.find { x => x.label=="h1" } match {
-        case Some(title) => title.text
-        case None => "no title"
-      }
-      val obj = Post(title, source).save
-      Ok(me.nsmr.scala_mdwiki.views.html.view.render(title, xhtml))
+      Redirect(routes.Application.view(Post(form.get).save.id))
     }
   }
 
+  def add = Action { Ok(me.nsmr.scala_mdwiki.views.html.add())}
+
   def view(id: Long) = Action{
+    val list = Post.getList() match {
+      case Some(list) => list
+      case None => List()
+    }
     Post(id) match {
       case None => NotFound("Page not found...")
       case Some(post) =>
-        Ok(me.nsmr.scala_mdwiki.views.html.view.render(post.title, post.getContentXHTML))
+        Ok(me.nsmr.scala_mdwiki.views.html.view.render(list, post))
+    }
+  }
+
+  def edit(id: Long) = Action{
+    Post(id) match {
+      case None => NotFound("Page not found...")
+      case Some(post) =>
+        Ok(me.nsmr.scala_mdwiki.views.html.edit.render(post))
+    }
+  }
+
+  def update(id: Long) = Action{ implicit req =>
+    Post(id) match {
+      case None => NotFound("Page not found...")
+      case Some(post) =>
+        val form = Form("source" -> nonEmptyText).bindFromRequest
+        if(form.hasErrors) {
+          Ok(me.nsmr.scala_mdwiki.views.html.add())
+        } else {
+          Redirect(routes.Application.view(post.update(form.get).id))
+        }
+    }
+  }
+
+  def remove(id: Long) = Action {
+    Post(id) match {
+      case None => NotFound("Page not found...")
+      case Some(post) =>
+        val result = post.delete
+        println(result)
+//        if(post.delete.id < 0) {
+        Redirect(routes.Application.index())
+//        } else {
+//          throw new Exception("operation failed: Remove")
+//        }
+    }
+  }
+
+  def upload = Action(parse.multipartFormData) { req =>
+    req.body.file("mdfile").map { picture =>
+      Redirect(routes.Application.view(
+          Post(FileUtil.readFile(picture.ref.file))
+            .save.id))
+    }.getOrElse {
+      Redirect(routes.Application.index).flashing(
+        "error" -> "Missing file")
     }
   }
 }

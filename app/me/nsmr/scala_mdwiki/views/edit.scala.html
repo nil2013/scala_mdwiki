@@ -1,0 +1,16 @@
+@(post: me.nsmr.scala_mdwiki.models.Post)
+@import me.nsmr.scala_mdwiki.views.html.helper._
+@import me.nsmr.scala_mdwiki.controllers
+
+@main("Edit: " + post.title) {
+<form action="@me.nsmr.scala_mdwiki.controllers.routes.Application.update(post.id)" method="POST">
+  <div class="form-group">
+    <label for="exampleInputEmail1">Markdown source</label>
+    <textarea class="form-control" rows="25" name="source">@post.content</textarea>
+  </div>
+  <input type="submit"  class="btn btn-default" value="Update" />
+  <input type="submit"  class="btn btn-default" value="Preview" />
+  <a href="@controllers.routes.Application.remove(post.id)" class="btn btn-danger">Remove this page</a>
+  <input type="hidden" name="id" value="@post.id" />
+</form>
+}
