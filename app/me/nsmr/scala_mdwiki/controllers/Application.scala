@@ -18,9 +18,12 @@ object Application extends Controller {
       Ok(me.nsmr.scala_mdwiki.views.html.index("Your new application is ready."))
     } else {
       val source = form.get
-      val md = knockoff(source)
-      val xhtml = toXHTML(md)
-      Ok(me.nsmr.scala_mdwiki.views.html.view.render(xhtml))
+      val xhtml = toXHTML(knockoff(source))
+      val title = xhtml.find { x => x.label=="h1" } match {
+        case Some(title) => title.text
+        case None => "no title"
+      }
+      Ok(me.nsmr.scala_mdwiki.views.html.view.render(title, xhtml))
     }
   }
 }
