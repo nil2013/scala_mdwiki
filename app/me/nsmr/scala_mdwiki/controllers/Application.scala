@@ -11,11 +11,7 @@ import me.nsmr.utils.FileUtil
 object Application extends Controller {
 
   def index = Action {
-    val list = Post.getList() match {
-      case Some(list) => list
-      case None => List()
-    }
-    Ok(me.nsmr.scala_mdwiki.views.html.index(list))
+    Ok(me.nsmr.scala_mdwiki.views.html.index(Post.getList().getOrElse(List())))
   }
 
   def post = Action { implicit req =>
@@ -84,6 +80,25 @@ object Application extends Controller {
     }.getOrElse {
       Redirect(routes.Application.index).flashing(
         "error" -> "Missing file")
+    }
+  }
+
+  def search = Action { implicit req =>
+    val form = Form("keyword" -> nonEmptyText).bindFromRequest
+    if(form.hasErrors) {
+      Ok(me.nsmr.scala_mdwiki.views.html.index(Post.getList().getOrElse(List())))
+    } else {
+      Ok(me.nsmr.scala_mdwiki.views.html.index(Post.getList(s"where content like '%${form.get}%'").getOrElse(List())))
+    }
+  }
+
+  def download(id: Long) = Action {
+    Post(id) match {
+      case None => NotFound("Page not found...")
+      case Some(post) =>
+        Ok(post.content).withHeaders(
+            CONTENT_DISPOSITION -> s"""attachment; filename="${post.title}.md""""
+            ).as("text/markdown; charset=UTF-8")
     }
   }
 }
