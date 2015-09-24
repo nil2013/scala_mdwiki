@@ -3,7 +3,7 @@
 @import me.nsmr.scala_mdwiki.controllers
 
 @main("Top") {
-<ul>
-  @for(post <- list){<li><h3><a href="@controllers.routes.Application.view(post.id)">@post.title</a></h3></li>}
+<ul class="file-list">
+  @for(post <- list){<li><h3><i class="fa fa-file-text-o"></i> <a href="@controllers.routes.Application.view(post.id)">@post.title</a></h3></li>}
 </ul>
 }

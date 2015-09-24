@@ -7,7 +7,7 @@
 @* <article class="markdown-body"> *@
 <div class="left navigation">
 <ul>
-  @for(post <- recent) {<li><a href="@controllers.routes.Application.view(post.id)">@post.title</a></li>}
+  @for(post <- recent) {<li><i class="fa fa-file-text-o"></i> <a href="@controllers.routes.Application.view(post.id)">@post.title</a></li>}
 </ul>
 </div>
 <div class="content">@post.getContentXHTML</div>
