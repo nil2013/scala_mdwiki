@@ -102,4 +102,8 @@ class GFSpanConverter(definitions: Seq[LinkDefinitionChunk]) extends SpanConvert
       case _ => convert(chunk.content, Nil)
     }
   }
+  override def matchers: List[String => Option[SpanMatch]] = List(matchMathSpan) ++ super.matchers
+  val matchMathSpan =
+    new DelimMatcher("$", s => Text(s"$$${s.head.asInstanceOf[Text].content}$$"),
+      false, None)
 }
