@@ -1,21 +1,9 @@
 package me.nsmr.parser
 
-import com.tristanhunt.knockoff.ChunkParser
-import com.tristanhunt.knockoff.Chunk
-import com.tristanhunt.knockoff.IndentedChunk
-import com.tristanhunt.knockoff.Discounter
-import com.tristanhunt.knockoff.ChunkStreamFactory
 import java.io.File
 import scala.collection.mutable.ListBuffer
-import com.tristanhunt.knockoff.Block
-import com.tristanhunt.knockoff.Span
+import com.tristanhunt.knockoff._
 import scala.util.parsing.input.Position
-import com.tristanhunt.knockoff.Text
-import com.tristanhunt.knockoff.CodeBlock
-import com.tristanhunt.knockoff.OrderedList
-import com.tristanhunt.knockoff.OrderedItem
-import com.tristanhunt.knockoff.UnorderedList
-import com.tristanhunt.knockoff.UnorderedItem
 
 class GFChunkParser extends ChunkParser {
   import com.tristanhunt.knockoff._
@@ -97,6 +85,21 @@ trait GFChunkStreamFactory  extends ChunkStreamFactory {
   /** Overridable factory method. */
   override def newChunkParser: ChunkParser = new GFChunkParser
 }
-trait GFDiscounter extends Discounter with GFChunkStreamFactory
+trait GFDiscounter extends Discounter with GFChunkStreamFactory {
+  import scala.util.parsing.input.CharSequenceReader
+  import com.tristanhunt.knockoff._
+  override def createSpanConverter(linkDefinitions: Seq[LinkDefinitionChunk]): SpanConverter =
+    new GFSpanConverter(linkDefinitions)
+}
 
 object GFDefaultDiscounter extends GFDiscounter
+
+class GFSpanConverter(definitions: Seq[LinkDefinitionChunk]) extends SpanConverter(definitions) {
+  override def apply(chunk: Chunk): Seq[Span] = {
+    chunk match {
+      case IndentedChunk(content) => List(new Text(content))
+      case CodeBlockChunk(content) => List(new Text(content))
+      case _ => convert(chunk.content, Nil)
+    }
+  }
+}
