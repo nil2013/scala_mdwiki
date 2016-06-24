@@ -3,15 +3,19 @@
 @import me.nsmr.scala_mdwiki.controllers
 
 @main(post.title, post.id) {
-
-@* <article class="markdown-body"> *@
-<div class="left navigation">
-<ul>
-  @for(post <- recent) {<li><i class="fa fa-file-text-o"></i> <a href="@controllers.routes.Application.view(post.id)">@post.title</a></li>}
-</ul>
+<div class="row">
+  <div class="col-sm-8" id="main-left">
+    @post.getContentXHTML
+  </div>
+  <div class="col-sm-4 hidden-xs hidden-print" id="main-right">
+    <div class="panel panel-default">
+      <div class="panel-heading"><h2 class="panel-title">ほかの記事</h2></div>
+      <div class="panel-body navigation">
+        <ul>
+          @for(post <- recent) {<li><i class="fa fa-file-text-o"></i> <a href="@controllers.routes.Application.view(post.id)">@post.title</a></li>}
+        </ul>
+      </div>
+    </div>
+  </div>
 </div>
-<div class="content">@post.getContentXHTML</div>
-
-@* </article> *@
-
 }

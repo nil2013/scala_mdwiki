@@ -12,64 +12,66 @@
 </head>
 
 <body>
-    <nav class="navbar navbar-default">
-        <div class="container-fluid">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand" href="/">Wikiトップ</a>
-            </div>
-            <div id="navbar" class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    <li class="active"><a href="#tab1" data-toggle="tab"><i class="fa fa-file-text"></i> 本文</a></li>
-                </ul>
-                <ul class="nav navbar-nav navbar-right">
-                    <li><a href="@me.nsmr.scala_mdwiki.controllers.routes.Application.add"><i class="fa fa-plus"></i> New</a></li>
-                    @if(id>=0) {
-                    <li><a href="@me.nsmr.scala_mdwiki.controllers.routes.Application.edit(id)"><i class="fa fa-pencil-square-o"></i> Edit</a></li>
-                    <li><a href="@me.nsmr.scala_mdwiki.controllers.routes.Application.download(id)"><i class="fa fa-download"></i> Download</a></li>
-                    }
-                    <li><a href="#" data-toggle="modal" data-target="#upload-modal"><i class="fa fa-upload"></i> Upload</a></li>
-                </ul>
-                <form class="navbar-form navbar-right" role="search" action="/search" method="get">
-                    <div class="form-group">
-                        <input type="text" class="form-control" placeholder="Search" name="keyword" value="">
-                    </div>
-                    <button type="submit" class="btn btn-default"><i class="fa fa-search"></i> 検索</button>
-                </form>
-            </div>
-            <!--/.nav-collapse -->
-        </div>
-        <!--/.container-fluid -->
-    </nav>
-    <div id="main">
-        @content
+  <!-- 大雑把な工程見通し：
+  １．コンテンツ表示部分を作る
+  ２．メニュー部を作る
+  ３．アップロード用のModal Dialogを作る -->
+  <nav class="navbar navbar-default hidden-print">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../">My Wiki</a>
+      </div>
+      <div id="navbar" class="navbar-collapse collapse">
+        <ul class="nav navbar-nav">
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Menu <span class="caret"></span></a>
+            <ul class="dropdown-menu">
+              @if(id>=0) {<li><a href="@me.nsmr.scala_mdwiki.controllers.routes.Application.edit(id)"><i class="fa fa-pencil-square-o"></i> Edit</a></li>}
+              <li><a href="@me.nsmr.scala_mdwiki.controllers.routes.Application.add"><i class="fa fa-plus"></i> New Page</a></li>
+              <li role="separator" class="divider"></li>
+              @if(id>=0) {<li><a href="@me.nsmr.scala_mdwiki.controllers.routes.Application.download(id)"><i class="fa fa-download"></i> Download</a></li>}
+              <li><a href="#" data-toggle="modal" data-target="#upload-modal"><i class="fa fa-upload"></i> Upload</a></li>
+            </ul>
+          </li>
+        </ul>
+        <form class="navbar-form navbar-right" role="search" action="/search" method="get">
+          <div class="form-group">
+              <input type="text" class="form-control" placeholder="Search" name="keyword" value="">
+          </div>
+          <button type="submit" class="btn btn-default"><i class="fa fa-search"></i> 検索</button>
+        </form>
+      </div>
     </div>
-    <!-- Modal -->
-    <form method="post" enctype="multipart/form-data" action="/upload">
-        <div class="modal fade" id="upload-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title" id="myModalLabel">Upload Markdown file</h4>
-                    </div>
-                    <div class="modal-body">
-                        <p>Please select Markdown file to upload.</p>
-                        <input type="file" name="mdfile" />
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-primary"><i class="fa fa-upload"></i> Upload</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </form>
+  </nav>
+  <div id="main" class="container">
+      @content
+  </div>
+  <form method="post" enctype="multipart/form-data" action="/upload">
+      <div class="modal fade" id="upload-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+          <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                  <div class="modal-header">
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                      <h4 class="modal-title" id="myModalLabel">Upload Markdown file</h4>
+                  </div>
+                  <div class="modal-body">
+                      <p>Select Markdown file to upload.</p>
+                      <input type="file" name="mdfile" />
+                  </div>
+                  <div class="modal-footer">
+                      <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                      <button type="submit" class="btn btn-primary"><i class="fa fa-upload"></i> Upload</button>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </form>
 </body>
 <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
 <link rel="stylesheet" media="screen, print" href="@routes.Assets.at("stylesheets/bootstrap.min.css")">
