@@ -1,16 +1,16 @@
-@(post: me.nsmr.scala_mdwiki.models.Post)
+@(post: Option[me.nsmr.scala_mdwiki.models.Post])
 @import me.nsmr.scala_mdwiki.views.html.helper._
 @import me.nsmr.scala_mdwiki.controllers
 
-@main("Edit: " + post.title) {
-<form action="@me.nsmr.scala_mdwiki.controllers.routes.Application.update(post.id)" method="POST">
+@main(post.map(p => "Edit: " + p.title).getOrElse("Add new page")) {
+<form action="@{post.map(p => me.nsmr.scala_mdwiki.controllers.routes.Application.update(p.id)).getOrElse(me.nsmr.scala_mdwiki.controllers.routes.Application.post)}" method="POST">
   <div class="form-group">
     <label for="exampleInputEmail1">Markdown source</label>
-    <textarea class="form-control" rows="25" name="source">@post.content</textarea>
+    <textarea class="form-control" rows="25" name="source">@post.map(_.content).getOrElse("")</textarea>
   </div>
-  <button type="submit"  class="btn btn-default"><i class="fa fa-refresh"></i> Update</button>
-  <button type="submit"  class="btn btn-default">Preview</button>
-  <a href="@controllers.routes.Application.remove(post.id)" class="btn btn-danger"><i class="fa fa-trash"></i> Remove this page</a>
-  <input type="hidden" name="id" value="@post.id" />
+  <button type="submit"  class="btn btn-default">@if(post.isDefined) {<i class="fa fa-refresh"></i> Update} else {<i class="fa fa-floppy-o"></i> Save}</button>
+  @if(post.isDefined) {<button type="submit"  class="btn btn-default">Preview</button>
+  <a href="@controllers.routes.Application.remove(post.get.id)" class="btn btn-danger"><i class="fa fa-trash"></i> Remove this page</a>
+  <input type="hidden" name="id" value="@post.get.id" />}
 </form>
 }

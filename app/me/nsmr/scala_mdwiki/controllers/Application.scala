@@ -17,13 +17,13 @@ object Application extends Controller {
   def post = Action { implicit req =>
     val form = Form("source" -> nonEmptyText).bindFromRequest
     if(form.hasErrors) {
-      Ok(me.nsmr.scala_mdwiki.views.html.add())
+      Ok(me.nsmr.scala_mdwiki.views.html.edit(None))
     } else {
       Redirect(routes.Application.view(Post(form.get).save.id))
     }
   }
 
-  def add = Action { Ok(me.nsmr.scala_mdwiki.views.html.add())}
+  def add = Action { Ok(me.nsmr.scala_mdwiki.views.html.edit(None)) }
 
   def view(id: Long) = Action{
     val list = Post.getList() match {
@@ -40,8 +40,8 @@ object Application extends Controller {
   def edit(id: Long) = Action{
     Post(id) match {
       case None => NotFound("Page not found...")
-      case Some(post) =>
-        Ok(me.nsmr.scala_mdwiki.views.html.edit.render(post))
+      case post =>
+        Ok(me.nsmr.scala_mdwiki.views.html.edit(post))
     }
   }
 
@@ -51,7 +51,7 @@ object Application extends Controller {
       case Some(post) =>
         val form = Form("source" -> nonEmptyText).bindFromRequest
         if(form.hasErrors) {
-          Ok(me.nsmr.scala_mdwiki.views.html.add())
+          Ok(me.nsmr.scala_mdwiki.views.html.edit(None))
         } else {
           Redirect(routes.Application.view(post.update(form.get).id))
         }
