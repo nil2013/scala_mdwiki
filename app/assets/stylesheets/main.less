@@ -1,40 +1,16 @@
 html { overflow-y: scroll; }
-body {
-  width:100%;
-  padding:0;
-  margin:0;
-}
-@media screen and (min-width: 768px){
-  div#main {
-    width:1100px;
-    margin:auto;
+
+div.container {
+  div#main-left {
+
   }
-  div.left.navigation {
-    margin:0;
-    width: 300px;
-    float:left;
-    padding-right:10px;
-    ul {
-      list-style:none;
-      padding-left:5px;
+  div#main-right {
+    padding-top:2%;
+    div.navigation {
+      ul {
+        list-style:none;
+        padding-left:5px;
+      }
     }
   }
-  div.content {
-    margin:0;
-    width:800px;
-    float:left;
-  }
 }
-@media screen and (max-width: 767px){
-  div#main {
-    width:100%;
-    margin:auto;
-  }
-  div.left.navigation { display: none !important; }
-  div.content {
-    width: 100%;
-    padding: 0 10px;
-  }
-}
-nav.navbar { border-radius:0; }
-ul.file-list { list-style: none; }
