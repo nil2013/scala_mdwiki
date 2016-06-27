@@ -6,11 +6,16 @@
 <form action="@{post.map(p => me.nsmr.scala_mdwiki.controllers.routes.Application.update(p.id)).getOrElse(me.nsmr.scala_mdwiki.controllers.routes.Application.post)}" method="POST">
   <div class="form-group">
     <label for="exampleInputEmail1">Markdown source</label>
-    <textarea class="form-control" rows="25" name="source">@post.map(_.content).getOrElse("")</textarea>
+    <textarea class="form-control tabIndent" rows="25" name="source">@post.map(_.content).getOrElse("")</textarea>
   </div>
   <button type="submit"  class="btn btn-default">@if(post.isDefined) {<i class="fa fa-refresh"></i> Update} else {<i class="fa fa-floppy-o"></i> Save}</button>
   @if(post.isDefined) {<button type="submit"  class="btn btn-default">Preview</button>
   <a href="@controllers.routes.Application.remove(post.get.id)" class="btn btn-danger"><i class="fa fa-trash"></i> Remove this page</a>
   <input type="hidden" name="id" value="@post.get.id" />}
 </form>
+<script src='@routes.Assets.at("javascripts/tabIndent.js")'></script>
+<script>
+  tabIndent.config.tab = '    ';
+  tabIndent.renderAll();
+</script>
 }
